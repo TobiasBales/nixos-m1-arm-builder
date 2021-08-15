@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build_iso:
+    name: Run build and validate iso file is present
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2.3.4
+
+      - name: Run build script
+        run: ./build.sh
+
+      - name: Validate presence of nixos.iso
+        run: test -e nixos.iso
+
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run ShellCheck
+      uses: ludeeus/action-shellcheck@master
