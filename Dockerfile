@@ -21,11 +21,10 @@ RUN source /home/nix/.nix-profile/etc/profile.d/nix.sh
 ENV PATH /home/nix/.nix-profile/bin:$PATH
 ENV NIX_PATH /home/nix/.nix-defexpr/channels
 
-# install nix-generators
-RUN /home/nix/.nix-profile/bin/nix-env -f https://github.com/nix-community/nixos-generators/archive/master.tar.gz -i
+
+COPY ./iso.nix /home/nix/iso.nix
 
 # generate nix iso
-RUN /home/nix/.nix-profile/bin/nixos-generate -f iso
+RUN nix-build '<nixpkgs/nixos>' -A config.system.build.isoImage -I nixos-config=iso.nix
 
-RUN cp $(find /nix/store/*-nixos.iso/iso/nixos.iso) /tmp/nixos.iso
-
+RUN cp $(find /home/nix/result/iso/nixos-*.iso) /tmp/nixos.iso
