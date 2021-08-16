@@ -23,6 +23,7 @@ ENV NIX_PATH /home/nix/.nix-defexpr/channels
 
 
 COPY ./iso.nix /home/nix/iso.nix
+RUN sudo chown nix:nix /home/nix/iso.nix
 
 # generate nix iso
 RUN nix-build '<nixpkgs/nixos>' -A config.system.build.isoImage -I nixos-config=iso.nix
